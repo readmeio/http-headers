@@ -13,7 +13,7 @@
     "pretest": "npm run lint && npm run prettier",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --check --write .",
-    "test": "jest --coverage"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "repository": {
     "type": "git",

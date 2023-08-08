@@ -10,11 +10,11 @@ describe('HTTP Headers', () => {
 
   describe('#normalizeHeader', () => {
     it('should convert a string into header identification format', () => {
-      expect(normalizeHeader('Authorization')).toBe('');
+      expect(normalizeHeader('Authorization')).toBe('{{HTTPHeader("Authorization")}}');
     });
 
     it('should capitalize lowercase headers', () => {
-      expect(normalizeHeader('content-length')).toBe('');
+      expect(normalizeHeader('content-length')).toBe('{{HTTPHeader("Content-Length")}}');
     });
   });
 });

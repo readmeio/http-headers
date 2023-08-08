@@ -4,7 +4,7 @@ export default {
   coveragePathIgnorePatterns: ['/dist', '/node_modules'],
   modulePaths: ['<rootDir>'],
   roots: ['<rootDir>'],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.ts$',
   transform: {
     '^.+\\.[tj]s$': [
       'ts-jest',
