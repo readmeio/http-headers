@@ -6,36 +6,43 @@ import { find } from 'unist-util-find';
 import { findAfter } from 'unist-util-find-after';
 import flatFilter from 'unist-util-flat-filter';
 
-const sourceUrl = 'https://raw.githubusercontent.com/mdn/content/main/files/en-us/web/http/headers/index.md';
+// Core Resource - Sourcing headers directly from MDN
+export const sourceUrl = 'https://raw.githubusercontent.com/mdn/content/main/files/en-us/web/http/headers/index.md';
+// Store MDN response in memory for future lookups
 let markdown: string;
 
-interface ChildTextNode extends Node {
-  value: string;
+/**
+ * Fetch MDN HTTP Header source markdown.
+ */
+export async function retrieveMarkdown(): Promise<string> {
+  return fetch(sourceUrl).then(res => res.text());
 }
 
-export async function retrieveMarkdown() {
-  try {
-    const response = await fetch(sourceUrl);
-    markdown = await response.text();
-  } catch (e) {
-    return '';
-  }
-
-  return markdown;
-}
-
-export const normalizeHeader = (value: string) => {
-  const normalizedValue = value
+/**
+ * Normalizes and converts a header into markdown-representative identifier
+ * @example
+ * normalizeHeader('content-length') -> '{{HTTPHeader("Content-Length")}}'
+ */
+export const normalizeHeader = (header: string): string => {
+  const normalizedValue = header
     .split('-')
-    .map(v => v.charAt(0).toUpperCase() + v.slice(1))
+    .map(h => h.charAt(0).toUpperCase() + h.slice(1))
     .join('-');
 
   return `{{HTTPHeader("${normalizedValue}")}}`;
 };
 
-export const searchHeaderDescription = (tree: Parent, value: string) => {
-  if (tree && value) {
-    const headerNode = find(tree as any, { value: normalizeHeader(value) });
+interface ChildTextNode extends Node {
+  value: string;
+}
+
+/**
+ * Performs lookup in MDN HTTP Header markdown for target header.
+ * Returns a description, if found.
+ */
+export const searchHeaderDescription = (tree: Parent, header: string): string => {
+  if (tree && header) {
+    const headerNode = find(tree as any, { value: normalizeHeader(header) });
 
     if (headerNode) {
       const descriptionNode = findAfter(tree, headerNode, { type: 'text' }) as ChildTextNode;
@@ -45,9 +52,14 @@ export const searchHeaderDescription = (tree: Parent, value: string) => {
   return '';
 };
 
-export default async function getHeaderDescription(header: string | string[]) {
+/**
+ * Performs lookup in MDN HTTP Header markdown for target list of HTTP headers.
+ */
+export default async function getHeaderDescription(header: string | string[]): Promise<Record<string, string>> {
   try {
-    if (!markdown) await retrieveMarkdown();
+    if (!markdown) {
+      markdown = await retrieveMarkdown();
+    }
 
     const mdast = fromMarkdown(markdown, 'utf-8') as any;
     const tree = flatFilter(mdast, node => node?.type === 'text') as Parent;
