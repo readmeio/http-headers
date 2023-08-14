@@ -10,30 +10,54 @@ import flatFilter from 'unist-util-flat-filter';
 export const sourceUrl = 'https://raw.githubusercontent.com/mdn/content/main/files/en-us/web/http/headers/index.md';
 // Store MDN response in memory for future lookups
 let markdown: string;
+// Store previously looked-up header descriptions in memory
+const cachedHTTPHeaders: Record<string, string> = {};
 
 /**
  * Fetch MDN HTTP Header source markdown.
  */
-export async function retrieveMarkdown(): Promise<string> {
-  return fetch(sourceUrl).then(res => res.text());
-}
+export const retrieveMarkdown = (): Promise<string> => fetch(sourceUrl).then(res => res.text());
 
 /**
  * Normalizes and converts a header into markdown-representative identifier
  * @example
- * normalizeHeader('content-length') -> '{{HTTPHeader("Content-Length")}}'
+ * normalizeHeader('content-length') -> '{{httpheader("content-length")}}'
  */
-export const normalizeHeader = (header: string): string => {
-  const normalizedValue = header
-    .split('-')
-    .map(h => h.charAt(0).toUpperCase() + h.slice(1))
-    .join('-');
+export const normalizeHeader = (header: string): string => `{{HTTPHeader("${header}")}}`.toLowerCase();
 
-  return `{{HTTPHeader("${normalizedValue}")}}`;
+export const buildDescription = (tree: Parent, headerNode: ChildTextNode) => {
+  let description = '';
+  let currentNode = headerNode;
+
+  while (!description.endsWith('.')) {
+    currentNode = findAfter(tree, currentNode, { type: 'text' }) as ChildTextNode;
+    if (currentNode?.value) {
+      const [fallback, text] = currentNode.value.split(': ') ?? [];
+      description = description.concat(text || fallback);
+    }
+  }
+
+  return description;
+};
+
+export const interpolateDescription = (description: string): string => {
+  const simpleGlossaryRegexp = /\{\{Glossary\("([^"]+)"?\)\}\}/g;
+  const compoundGlossaryRegexp = /\{\{Glossary\("([^"]+)", "([^"]+)"\)\}\}/g;
+
+  switch (true) {
+    case !!description.match(simpleGlossaryRegexp):
+      return description.split(simpleGlossaryRegexp).join('');
+    case !!description.match(compoundGlossaryRegexp):
+      // eslint-disable-next-line no-case-declarations
+      const [start, , interpolation, end] = description.split(compoundGlossaryRegexp);
+      return `${start}${interpolation}${end}`;
+    default:
+      return description;
+  }
 };
 
 interface ChildTextNode extends Node {
-  value: string;
+  value?: string;
 }
 
 /**
@@ -42,11 +66,15 @@ interface ChildTextNode extends Node {
  */
 export const searchHeaderDescription = (tree: Parent, header: string): string => {
   if (tree && header) {
-    const headerNode = find(tree as any, { value: normalizeHeader(header) });
+    const headerNode = find(tree as any, (node: ChildTextNode) => {
+      return (
+        (node.value?.toLowerCase().includes(normalizeHeader(header)) && node.position?.start.column === 3) || false
+      );
+    });
 
     if (headerNode) {
-      const descriptionNode = findAfter(tree, headerNode, { type: 'text' }) as ChildTextNode;
-      if (descriptionNode?.value) return descriptionNode.value.split(': ')?.[1];
+      const description = buildDescription(tree, headerNode);
+      return interpolateDescription(description);
     }
   }
   return '';
@@ -57,16 +85,25 @@ export const searchHeaderDescription = (tree: Parent, header: string): string =>
  */
 export default async function getHeaderDescription(header: string | string[]): Promise<Record<string, string>> {
   try {
-    if (!markdown) {
-      markdown = await retrieveMarkdown();
-    }
+    // If markdown has not been requested and cached, do so now
+    if (!markdown) markdown = await retrieveMarkdown();
 
+    // Convert text -> markdown syntax tree
     const mdast = fromMarkdown(markdown, 'utf-8') as any;
+    // Flatten tree for easy value enumeration
     const tree = flatFilter(mdast, node => node?.type === 'text') as Parent;
-
+    // Convert args into a unified format
     const headers = Array.isArray(header) ? header : [header];
+
+    // Process headers and apply found descriptions
     return headers.reduce((acc, h) => {
-      acc[h] = searchHeaderDescription(tree, h);
+      if (cachedHTTPHeaders[h]) {
+        acc[h] = cachedHTTPHeaders[h];
+      } else {
+        const description = searchHeaderDescription(tree, h);
+        cachedHTTPHeaders[h] = description;
+        acc[h] = description;
+      }
       return acc;
     }, {} as Record<string, string>);
   } catch (e) {
