@@ -1,12 +1,38 @@
+import { jest } from '@jest/globals';
+import fetch from 'node-fetch';
+
 import * as httpHeaders from '../src';
 
-const { default: getHeaderDescription } = httpHeaders;
+jest.mock('node-fetch');
+
+const { default: getHeaderDescription, interpolateDescription } = httpHeaders;
+const fetchMock = fetch as any;
 
 describe('HTTP Headers', () => {
   describe('#retrieveMarkdown', () => {
     it('should request source markdown from MDN', async () => {
       const markdown = await httpHeaders.retrieveMarkdown();
       expect(markdown).toContain('title: HTTP headers');
+    });
+  });
+
+  describe('#interpolateDescription', () => {
+    it('should interpolate a complex glossary term', () => {
+      const input = 'Informs the server about the {{Glossary("MIME_type", "types")}} of data that can be sent back.';
+      expect(interpolateDescription(input)).toBe('Informs the server about the types of data that can be sent back.');
+    });
+
+    it('should interpolate a simple glossary term', () => {
+      const input =
+        'The {{Glossary("effective connection type")}} ("network profile") that best matches the connection\'s latency and bandwidth.';
+      expect(interpolateDescription(input)).toBe(
+        'The effective connection type ("network profile") that best matches the connection\'s latency and bandwidth.'
+      );
+    });
+
+    it('should return existing description if no regexp matches', () => {
+      const input = "Approximate bandwidth of the client's connection to the server, in Mbps.";
+      expect(interpolateDescription(input)).toBe(input);
     });
   });
 
@@ -19,17 +45,18 @@ describe('HTTP Headers', () => {
   });
 
   describe('#getHeaderDescription', () => {
+    it.only('should return an empty object if something goes wrong', async () => {
+      console.log(fetchMock);
+      fetchMock.mockRejectedValue(new Error('Does not exist.'));
+      const headers = 'Connection';
+      const descriptions = await getHeaderDescription(headers);
+      expect(descriptions).toStrictEqual({});
+    });
+
     // it('should retrieve markdown if not already cached', async () => {
     //   await getHeaderDescription([]);
     //   expect(fetchMock).toHaveBeenCalledWith(sourceUrl);
     //   expect(fetchMock).toHaveBeenCalledTimes(1);
-    // });
-
-    // it('should return an empty object if something goes wrong', async () => {
-    //   jest.spyOn(httpHeaders, 'retrieveMarkdown').mockRejectedValueOnce(new Error('Does not exist.'));
-    //   const headers = 'Connection';
-    //   const descriptions = await getHeaderDescription(headers);
-    //   expect(descriptions).toStrictEqual({});
     // });
 
     it('should return a header description for a string arguement', async () => {

@@ -16,7 +16,12 @@ const cachedHTTPHeaders: Record<string, string> = {};
 /**
  * Fetch MDN HTTP Header source markdown.
  */
-export const retrieveMarkdown = (): Promise<string> => fetch(sourceUrl).then(res => res.text());
+export const retrieveMarkdown = (): Promise<string> => {
+  return fetch(sourceUrl).then(res => {
+    if (!res.ok) throw new Error('Failed to fetch markdown.');
+    return res.text();
+  });
+};
 
 /**
  * Normalizes and converts a header into markdown-representative identifier
@@ -25,7 +30,11 @@ export const retrieveMarkdown = (): Promise<string> => fetch(sourceUrl).then(res
  */
 export const normalizeHeader = (header: string): string => `{{HTTPHeader("${header}")}}`.toLowerCase();
 
-export const buildDescription = (tree: Parent, headerNode: ChildTextNode) => {
+/**
+ * Builds complete HTTP header description
+ * Full description may be multi-line. Ensure we've captured complete text before returning.
+ */
+export const buildDescription = (tree: Parent, headerNode: ChildTextNode): string => {
   let description = '';
   let currentNode = headerNode;
 
@@ -33,13 +42,18 @@ export const buildDescription = (tree: Parent, headerNode: ChildTextNode) => {
     currentNode = findAfter(tree, currentNode, { type: 'text' }) as ChildTextNode;
     if (currentNode?.value) {
       const [fallback, text] = currentNode.value.split(': ') ?? [];
-      description = description.concat(text || fallback);
+      description = description.concat(text || fallback || '');
     }
   }
 
   return description;
 };
 
+/**
+ * Interpolates description string content
+ * @example
+ * interpolateDescription('{{Glossary("MIME_type", "types")}}') => 'types'
+ */
 export const interpolateDescription = (description: string): string => {
   const simpleGlossaryRegexp = /\{\{Glossary\("([^"]+)"?\)\}\}/g;
   const compoundGlossaryRegexp = /\{\{Glossary\("([^"]+)", "([^"]+)"\)\}\}/g;
