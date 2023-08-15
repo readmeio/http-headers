@@ -58,6 +58,8 @@ export const interpolateDescription = (description: string): string => {
   const simpleGlossaryRegexp = /\{\{Glossary\("([^"]+)"?\)\}\}/g;
   const compoundGlossaryRegexp = /\{\{Glossary\("([^"]+)", "([^"]+)"\)\}\}/g;
 
+  if (!description) return description;
+
   switch (true) {
     case !!description.match(simpleGlossaryRegexp):
       return description.split(simpleGlossaryRegexp).join('');

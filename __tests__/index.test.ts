@@ -33,14 +33,6 @@ describe('HTTP Headers', () => {
     });
   });
 
-  describe('#searchHeaderDescription', () => {
-    it.todo('should return an empty string if headerNode not found');
-
-    it.todo('should return an empty string if description node has no value');
-
-    it.todo('should return a description');
-  });
-
   describe('#getHeaderDescription', () => {
     afterEach(() => {
       nock.restore();
@@ -54,13 +46,7 @@ describe('HTTP Headers', () => {
       mock.done();
     });
 
-    // it('should retrieve markdown if not already cached', async () => {
-    //   await getHeaderDescription([]);
-    //   expect(fetchMock).toHaveBeenCalledWith(sourceUrl);
-    //   expect(fetchMock).toHaveBeenCalledTimes(1);
-    // });
-
-    it('should return a header description for a string arguement', async () => {
+    it('should return a header description for a string argument', async () => {
       const headers = 'Connection';
       const descriptions = await getHeaderDescription(headers);
       expect(descriptions).toStrictEqual({
