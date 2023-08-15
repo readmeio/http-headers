@@ -110,16 +110,19 @@ export default async function getHeaderDescription(header: string | string[]): P
     const headers = Array.isArray(header) ? header : [header];
 
     // Process headers and apply found descriptions
-    return headers.reduce((acc, h) => {
-      if (cachedHTTPHeaders[h]) {
-        acc[h] = cachedHTTPHeaders[h];
-      } else {
-        const description = searchHeaderDescription(tree, h);
-        cachedHTTPHeaders[h] = description;
-        acc[h] = description;
-      }
-      return acc;
-    }, {} as Record<string, string>);
+    return headers.reduce(
+      (acc, h) => {
+        if (cachedHTTPHeaders[h]) {
+          acc[h] = cachedHTTPHeaders[h];
+        } else {
+          const description = searchHeaderDescription(tree, h);
+          cachedHTTPHeaders[h] = description;
+          acc[h] = description;
+        }
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
   } catch (e) {
     return {};
   }

@@ -1,12 +1,9 @@
-import { jest } from '@jest/globals';
-import fetch from 'node-fetch';
+import nock from 'nock';
+import { describe, it, expect, afterEach } from 'vitest';
 
 import * as httpHeaders from '../src';
 
-jest.mock('node-fetch');
-
-const { default: getHeaderDescription, interpolateDescription } = httpHeaders;
-const fetchMock = fetch as any;
+const { default: getHeaderDescription, interpolateDescription, sourceUrl } = httpHeaders;
 
 describe('HTTP Headers', () => {
   describe('#retrieveMarkdown', () => {
@@ -26,7 +23,7 @@ describe('HTTP Headers', () => {
       const input =
         'The {{Glossary("effective connection type")}} ("network profile") that best matches the connection\'s latency and bandwidth.';
       expect(interpolateDescription(input)).toBe(
-        'The effective connection type ("network profile") that best matches the connection\'s latency and bandwidth.'
+        'The effective connection type ("network profile") that best matches the connection\'s latency and bandwidth.',
       );
     });
 
@@ -45,12 +42,16 @@ describe('HTTP Headers', () => {
   });
 
   describe('#getHeaderDescription', () => {
-    it.only('should return an empty object if something goes wrong', async () => {
-      console.log(fetchMock);
-      fetchMock.mockRejectedValue(new Error('Does not exist.'));
+    afterEach(() => {
+      nock.restore();
+    });
+
+    it('should return an empty object if something goes wrong', async () => {
+      const mock = nock(sourceUrl).get('').reply(500);
       const headers = 'Connection';
       const descriptions = await getHeaderDescription(headers);
       expect(descriptions).toStrictEqual({});
+      mock.done();
     });
 
     // it('should retrieve markdown if not already cached', async () => {
