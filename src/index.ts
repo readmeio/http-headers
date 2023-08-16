@@ -55,21 +55,22 @@ export const buildDescription = (tree: Parent, headerNode: ChildTextNode): strin
  * interpolateDescription('{{Glossary("MIME_type", "types")}}') => 'types'
  */
 export const interpolateDescription = (description: string): string => {
+  // i.e. '{{Glossary("effective connection type")}}'
   const simpleGlossaryRegexp = /\{\{Glossary\("([^"]+)"?\)\}\}/g;
+  // i.e. '{{Glossary("MIME_type", "types")}}'
   const compoundGlossaryRegexp = /\{\{Glossary\("([^"]+)", "([^"]+)"\)\}\}/g;
 
+  // Prematurely return if nothing to process
   if (!description) return description;
 
-  switch (true) {
-    case !!description.match(simpleGlossaryRegexp):
-      return description.split(simpleGlossaryRegexp).join('');
-    case !!description.match(compoundGlossaryRegexp):
-      // eslint-disable-next-line no-case-declarations
-      const [start, , interpolation, end] = description.split(compoundGlossaryRegexp);
-      return `${start}${interpolation}${end}`;
-    default:
-      return description;
+  if (description.match(simpleGlossaryRegexp)) return description.split(simpleGlossaryRegexp).join('');
+
+  if (description.match(compoundGlossaryRegexp)) {
+    const [start, , interpolation, end] = description.split(compoundGlossaryRegexp);
+    return `${start}${interpolation}${end}`;
   }
+
+  return description;
 };
 
 interface ChildTextNode extends Node {
