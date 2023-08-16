@@ -26,7 +26,7 @@ export const retrieveMarkdown = (): Promise<string> => {
 /**
  * Normalizes and converts a header into markdown-representative identifier
  * @example
- * normalizeHeader('content-length') -> '{{httpheader("content-length")}}'
+ * normalizeHeader('content-length') -> '{{HTTPHeader("content-length")}}'
  */
 export const normalizeHeader = (header: string): string => `{{HTTPHeader("${header}")}}`.toLowerCase();
 
