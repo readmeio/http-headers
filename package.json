@@ -1,9 +1,10 @@
 {
-  "name": "http-headers",
+  "name": "@readme/http-headers",
   "version": "1.0.0",
   "description": "Retrieve HTTP Header Descriptions ",
   "main": "dist/index.js",
   "type": "module",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts",
