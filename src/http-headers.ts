@@ -4,7 +4,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
   Accept: {
     description: 'Informs the server about the types of data that can be sent back.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept',
-    markdown: 'Informs the server about the {{Glossary("MIME_type", "types")}} of data that can be sent back.',
   },
   'Accept-CH': {
     experimental: true,
@@ -64,8 +63,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
     description:
       'Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers',
-    markdown:
-      'Used in response to a {{Glossary("Preflight_request", "preflight request")}} to indicate which HTTP headers can be used when making the actual request.',
   },
   'Access-Control-Allow-Methods': {
     description: 'Specifies the methods allowed when accessing the resource in response to a preflight request.',
@@ -127,7 +124,7 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
     description: 'Contains stored HTTP cookies previously sent by the server with the Set-Cookie header.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie',
     markdown:
-      'Contains stored [HTTP cookies](/en-US/docs/Web/HTTP/Cookies) previously sent by the server with the {{HTTPHeader("Set-Cookie")}} header.',
+      'Contains stored [HTTP cookies](/en-US/docs/Web/HTTP/Cookies) previously sent by the server with the "Set-Cookie" header.',
   },
   'Content-Encoding': {
     description: 'Used to specify the compression algorithm.',
@@ -177,7 +174,7 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
       'Allows web developers to experiment with policies by monitoring, but not enforcing, their effects. These violation reports consist of JSON documents sent via an HTTP POST request to the specified URI.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only',
     markdown:
-      'Allows web developers to experiment with policies by monitoring, but not enforcing, their effects. These violation reports consist of {{Glossary("JSON")}} documents sent via an HTTP `POST` request to the specified URI.',
+      'Allows web developers to experiment with policies by monitoring, but not enforcing, their effects. These violation reports consist of JSON documents sent via an HTTP `POST` request to the specified URI.',
   },
   'Critical-CH': {
     experimental: true,
@@ -235,14 +232,12 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
       'The effective connection type ("network profile") that best matches the connection\'s latency and bandwidth. This is part of the Network Information API.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ECT',
     markdown:
-      'The {{Glossary("effective connection type")}} ("network profile") that best matches the connection\'s latency and bandwidth. This is part of the [Network Information API](/en-US/docs/Web/API/Network_Information_API).',
+      'The "network profile" that best matches the connection\'s latency and bandwidth. This is part of the [Network Information API](/en-US/docs/Web/API/Network_Information_API).',
   },
   ETag: {
     description:
       'A unique string identifying the version of the resource. Conditional requests using If-Match and If-None-Match use this value to change the behavior of the request.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag',
-    markdown:
-      'A unique string identifying the version of the resource. Conditional requests using {{HTTPHeader("If-Match")}} and {{HTTPHeader("If-None-Match")}} use this value to change the behavior of the request.',
   },
   Expect: {
     description: 'Indicates expectations that need to be fulfilled by the server to properly handle the request.',
@@ -308,17 +303,15 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
   },
   'Last-Modified': {
     description:
-      'The last modification date of the resource, used to compare several versions of the same resource. It is less accurate than ETag, but easier to calculate in some environments. Conditional requests using If-Modified-Since and If-Unmodified-Since use this value to change the behavior of the request.',
+      'The last modification date of the resource, used to compare several versions of the same resource. It is less accurate than "ETag", but easier to calculate in some environments. Conditional requests using "If-Modified-Since" and "If-Unmodified-Since" use this value to change the behavior of the request.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified',
-    markdown:
-      'The last modification date of the resource, used to compare several versions of the same resource. It is less accurate than {{HTTPHeader("ETag")}}, but easier to calculate in some environments. Conditional requests using {{HTTPHeader("If-Modified-Since")}} and {{HTTPHeader("If-Unmodified-Since")}} use this value to change the behavior of the request.',
   },
   Link: {
     description:
       'The "Link" entity-header field provides a means for serializing one or more links in HTTP headers. It is semantically equivalent to the HTML link element.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link',
     markdown:
-      'The [`Link`](https://datatracker.ietf.org/doc/html/rfc5988#section-5) entity-header field provides a means for serializing one or more links in HTTP headers. It is semantically equivalent to the HTML {{HTMLElement("link")}} element.',
+      'The [`Link`](https://datatracker.ietf.org/doc/html/rfc5988#section-5) entity-header field provides a means for serializing one or more links in HTTP headers. It is semantically equivalent to the HTML link element.',
   },
   Location: {
     description: 'Indicates the URL to redirect a page to.',
@@ -348,8 +341,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
     description:
       "Provides a mechanism to allow and deny the use of browser features in a website's own frame, and in iframes that it embeds.",
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy',
-    markdown:
-      'Provides a mechanism to allow and deny the use of browser features in a website\'s own frame, and in {{htmlelement("iframe")}}s that it embeds.',
   },
   Pragma: {
     deprecated: true,
@@ -385,8 +376,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
   'Referrer-Policy': {
     description: 'Governs which referrer information sent in the Referer header should be included with requests made.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy',
-    markdown:
-      'Governs which referrer information sent in the {{HTTPHeader("Referer")}} header should be included with requests made.',
   },
   Refresh: {
     description:
@@ -521,7 +510,7 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
       'A request header sent in preemptive request to fetch a resource during service worker boot. The value, which is set with NavigationPreloadManager.setHeaderValue(), can be used to inform a server that a different resource should be returned than in a normal fetch operation.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Service-Worker-Navigation-Preload',
     markdown:
-      'A request header sent in preemptive request to {{domxref("fetch()")}} a resource during service worker boot. The value, which is set with {{domxref("NavigationPreloadManager.setHeaderValue()")}}, can be used to inform a server that a different resource should be returned than in a normal `fetch()` operation.',
+      'A request header sent in preemptive request to `fetch()` a resource during service worker boot. The value, which is set with `NavigationPreloadManager.setHeaderValue()`, can be used to inform a server that a different resource should be returned than in a normal `fetch()` operation.',
   },
   'Set-Cookie': {
     description: 'Send cookies from the server to the user-agent.',
@@ -583,8 +572,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
     description:
       "Sends a signal to the server expressing the client's preference for an encrypted and authenticated response, and that it can successfully handle the upgrade-insecure-requests directive.",
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Upgrade-Insecure-Requests',
-    markdown:
-      'Sends a signal to the server expressing the client\'s preference for an encrypted and authenticated response, and that it can successfully handle the {{CSP("upgrade-insecure-requests")}} directive.',
   },
   'User-Agent': {
     description:
@@ -629,7 +616,6 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
   'X-Content-Type-Options': {
     description: 'Disables MIME sniffing and forces browser to use the type given in Content-Type.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options',
-    markdown: 'Disables MIME sniffing and forces browser to use the type given in {{HTTPHeader("Content-Type")}}.',
   },
   'X-DNS-Prefetch-Control': {
     description:
@@ -651,10 +637,9 @@ const HTTPHeaders: Record<HTTPHeader, HTTPHeaderDescription> = {
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto',
   },
   'X-Frame-Options': {
-    description: 'Indicates whether a browser should be allowed to render a page in a frame, iframe, embed or object.',
+    description:
+      'Indicates whether a browser should be allowed to render a page in a "frame", "iframe", "embed" or "object".',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options',
-    markdown:
-      'Indicates whether a browser should be allowed to render a page in a {{HTMLElement("frame")}}, {{HTMLElement("iframe")}}, {{HTMLElement("embed")}} or {{HTMLElement("object")}}.',
   },
   'X-Permitted-Cross-Domain-Policies': {
     description:
