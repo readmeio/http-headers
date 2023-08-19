@@ -35,7 +35,7 @@ console.log(getHeader('Cookie'));
     description: 'Contains stored HTTP cookies previously sent by the server with the Set-Cookie header.',
     link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie',
     markdown:
-      'Contains stored [HTTP cookies](/en-US/docs/Web/HTTP/Cookies) previously sent by the server with the {{HTTPHeader("Set-Cookie")}} header.',
+      'Contains stored [HTTP cookies](/en-US/docs/Web/HTTP/Cookies) previously sent by the server with the "Set-Cookie" header',
 }
 **/
 
