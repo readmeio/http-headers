@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> `@readme/http-headerscodes` has moved! The source for this library now lives at https://github.com/readmeio/oas.
+> 
 # @readme/http-headers
 
 Utility to find descriptions for HTTP headers.
